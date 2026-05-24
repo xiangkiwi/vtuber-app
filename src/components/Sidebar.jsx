@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 
-export default function Sidebar({ isLiveMode, onToggleLiveMode, onVrmUpload, cameraEnabled, onToggleCamera }) {
+export default function Sidebar({ isLiveMode, onToggleLiveMode, onVrmUpload, cameraEnabled, onToggleCamera, handEnabled, onToggleHand }) {
   const fileInputRef = useRef(null)
 
   const handleFileChange = (e) => {
@@ -60,6 +60,29 @@ export default function Sidebar({ isLiveMode, onToggleLiveMode, onVrmUpload, cam
           </div>
           <p className="text-xs text-gray-500 mt-2">
             首次使用需授权摄像头权限
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            手部追踪
+          </h2>
+          <button
+            onClick={onToggleHand}
+            className={`w-full py-2 px-3 rounded-lg text-sm font-semibold transition-colors ${
+              handEnabled
+                ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                : 'bg-gray-700 hover:bg-gray-600 text-white'
+            }`}
+          >
+            {handEnabled ? '🤚 停止手部追踪' : '🤚 开启手部追踪'}
+          </button>
+          <div className={`mt-2 flex items-center gap-2 text-xs ${handEnabled ? 'text-purple-400' : 'text-gray-500'}`}>
+            <span className={`w-2 h-2 rounded-full flex-shrink-0 ${handEnabled ? 'bg-purple-400 animate-pulse' : 'bg-gray-600'}`} />
+            {handEnabled ? '手臂+手指追踪中...' : '手部追踪未开启'}
+          </div>
+          <p className="text-xs text-gray-500 mt-2">
+            需露出上半身，首次加载需要片刻
           </p>
         </section>
       </div>

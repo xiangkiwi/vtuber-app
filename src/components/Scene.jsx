@@ -3,24 +3,27 @@ import { OrbitControls } from '@react-three/drei'
 import { useVrm } from '../hooks/useVrm.js'
 import { useRef } from 'react'
 
-function VrmUpdater({ vrmRef, faceResultRef, applyFace }) {
+function VrmUpdater({ vrmRef, faceResultRef, applyFace, handResultRef, applyHand }) {
   useFrame((_, delta) => {
     if (!vrmRef.current) return
     if (faceResultRef.current && applyFace) {
       applyFace(vrmRef.current, faceResultRef.current)
+    }
+    if (handResultRef.current && applyHand) {
+      applyHand(vrmRef.current, handResultRef.current)
     }
     vrmRef.current.update(delta)
   })
   return null
 }
 
-function VrmLoader({ url, faceResultRef, applyFace }) {
+function VrmLoader({ url, faceResultRef, applyFace, handResultRef, applyHand }) {
   const { scene } = useThree()
   const vrmRef = useVrm(url, scene)
-  return <VrmUpdater vrmRef={vrmRef} faceResultRef={faceResultRef} applyFace={applyFace} />
+  return <VrmUpdater vrmRef={vrmRef} faceResultRef={faceResultRef} applyFace={applyFace} handResultRef={handResultRef} applyHand={applyHand} />
 }
 
-export default function Scene({ vrmUrl, isLiveMode, faceResultRef, applyFace }) {
+export default function Scene({ vrmUrl, isLiveMode, faceResultRef, applyFace, handResultRef, applyHand }) {
   return (
     <Canvas
       gl={{ alpha: true, antialias: true }}
@@ -51,7 +54,7 @@ export default function Scene({ vrmUrl, isLiveMode, faceResultRef, applyFace }) 
       <ambientLight intensity={0.8} />
       <directionalLight position={[1, 2, 2]} intensity={1.2} />
       <directionalLight position={[-1, 0, 1]} intensity={0.4} />
-      <VrmLoader url={vrmUrl} faceResultRef={faceResultRef} applyFace={applyFace} />
+      <VrmLoader url={vrmUrl} faceResultRef={faceResultRef} applyFace={applyFace} handResultRef={handResultRef} applyHand={applyHand} />
     </Canvas>
   )
 }

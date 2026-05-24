@@ -3,17 +3,26 @@ import Sidebar from './components/Sidebar.jsx'
 import Scene from './components/Scene.jsx'
 import { useFaceTracking } from './hooks/useFaceTracking.js'
 import { useFaceToVrm } from './hooks/useFaceToVrm.js'
+import { useHandTracking } from './hooks/useHandTracking.js'
+import { useHandToVrm } from './hooks/useHandToVrm.js'
 
 export default function App() {
   const [isLiveMode, setIsLiveMode] = useState(false)
   const [vrmUrl, setVrmUrl] = useState('/avatar.vrm')
   const [cameraEnabled, setCameraEnabled] = useState(false)
+  const [handEnabled, setHandEnabled] = useState(false)
 
   const faceResultRef = useRef(null)
+  const handResultRef = useRef(null)
   const applyFace = useFaceToVrm()
+  const applyHand = useHandToVrm()
 
   useFaceTracking(cameraEnabled, (result) => {
     faceResultRef.current = result
+  })
+
+  useHandTracking(handEnabled, (result) => {
+    handResultRef.current = result
   })
 
   const toggleLiveMode = useCallback(() => {
@@ -42,10 +51,12 @@ export default function App() {
           onVrmUpload={handleVrmUpload}
           cameraEnabled={cameraEnabled}
           onToggleCamera={() => setCameraEnabled(v => !v)}
+          handEnabled={handEnabled}
+          onToggleHand={() => setHandEnabled(v => !v)}
         />
       </div>
       <div className="canvas-wrapper flex-1 relative">
-        <Scene vrmUrl={vrmUrl} isLiveMode={isLiveMode} faceResultRef={faceResultRef} applyFace={applyFace} />
+        <Scene vrmUrl={vrmUrl} isLiveMode={isLiveMode} faceResultRef={faceResultRef} applyFace={applyFace} handResultRef={handResultRef} applyHand={applyHand} />
         {isLiveMode && (
           <button
             onClick={toggleLiveMode}

@@ -83,11 +83,29 @@ MediaPipe code requests `delegate: 'GPU'` but on dual-GPU laptops the browser de
 
 ---
 
+---
+
+## Phase 3: Hand & Arm Tracking (complete)
+
+**11. PoseLandmarker via `useHandTracking.js`**
+Initializes `PoseLandmarker` (pose_landmarker_lite model) alongside `HandLandmarker`, both from `@mediapipe/tasks-vision` (already a dependency). Runs a separate `requestAnimationFrame` detection loop independent of face tracking. Results pushed into `handResultRef` (not state) to avoid re-renders.
+
+**12. Arm bone mapping via `useHandToVrm.js`**
+Maps pose world landmarks (shoulder→elbow→wrist vectors) to `leftUpperArm`, `rightUpperArm`, `leftLowerArm`, `rightLowerArm` rotations. Upper arm pitch/roll derived from shoulder→elbow direction vector; elbow bend derived from upper/lower arm angle. All values lerp-smoothed (α=0.2 for stability).
+
+**13. Finger bone mapping via `useHandToVrm.js`**
+Maps `HandLandmarker` 21-point landmarks to all finger bones (proximal/intermediate/distal for index/middle/ring/little + thumb metacarpal/proximal/distal). Curl computed from MCP→PIP→TIP joint angles. Left/right mirrored for natural avatar behavior. Lerp-smoothed at α=0.35.
+
+**14. Independent toggle**
+Hand tracking has its own toggle in the sidebar (purple, separate from face tracking blue). Both trackers can run simultaneously or independently.
+
+---
+
 ## What's NOT yet done
 
-- Blendshape sensitivity controls — Phase 3
-- Lighting / camera presets — Phase 3
-- Settings persistence — Phase 3
+- Blendshape sensitivity controls — Phase 4
+- Lighting / camera presets — Phase 4
+- Settings persistence — Phase 4
 
 ---
 
@@ -95,4 +113,5 @@ MediaPipe code requests `delegate: 'GPU'` but on dual-GPU laptops the browser de
 - [x] Requirements confirmed
 - [x] Phase 1 implementation complete (VRM viewer, green screen, file upload)
 - [x] Phase 2 implementation complete (MediaPipe face tracking, blendshapes, head pose)
-- [ ] Deployed to Vercel
+- [x] Phase 3 implementation complete (arm + finger tracking via PoseLandmarker + HandLandmarker)
+- [x] Deployed to Vercel — https://vtuber-app-test.vercel.app/
